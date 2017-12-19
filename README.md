@@ -10,7 +10,7 @@ To generate data, use `data_generator.py` script.  Use `-h` to see usage.
 
 ## Hypothesis testing
 
-`macau.py` uses [resampling](testing://en.wikipedia.org/wiki/Resampling_(statistics)) to compute test statistics and _p_-values.
+`macau.py` uses [resampling](https://en.wikipedia.org/wiki/Resampling_(statistics)) to compute test statistics and _p_-values.
 
 Usage:
 ```bash
