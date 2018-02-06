@@ -1,6 +1,6 @@
 # Macau
 
-Macau is one of the tools used in Zgraggen, Zhao, Zeleznik and Kraska, _Investigating the Effect of the Multiple Comparison Problem in Visual Analysis_ in [CHI 2018](https://chi2018.acm.org/).
+Macau is one of the tools used in Zgraggen, Zhao, Zeleznik and Kraska, [Investigating the Effect of the Multiple Comparison Problem in Visual Analysis](http://emanuelzgraggen.com/assets/pdf/risk.pdf) in [CHI 2018](https://chi2018.acm.org/).
 
 Macau consists of two parts, the data generation and the statitical hypothesis testing.
 
@@ -17,7 +17,7 @@ Usage:
 python3 macau.py <exec_mode> <data_path> <permutations> <hypotheses_path>
 ```
 The `data_path` is a data file output by `data_generator`.
-The `hypotheses_path` is a file containing hypotheses using the encoding intoduced in [1].
+The `hypotheses_path` is a file containing hypotheses that are formatted using the encoding scheme intoduced in [1].
 
 ## Reference
-[1] Zgraggen, Zhao, Zeleznik and Kraska, _Investigating the Effect of the Multiple Comparison Problem in Visual Analysis_, CHI 2018.
+[1] Zgraggen, Zhao, Zeleznik and Kraska, [Investigating the Effect of the Multiple Comparison Problem in Visual Analysis](http://emanuelzgraggen.com/assets/pdf/risk.pdf), CHI 2018.
