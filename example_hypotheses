@@ -1,0 +1,36 @@
+{"dimension":"purchases", "dist_alt":"age>=15 and age < 20", "dist_null":"", "test":"mean_higher"}
+{"dimension":"purchases", "dist_alt":"age>=15 and age < 20", "dist_null":"", "test":"mean_smaller"}
+{"dimension":"purchases", "dist_alt":"age>=15 and age < 20", "dist_null":"", "test":"mean_same"}
+{"dimension":"purchases", "dist_alt":"age>=15 and age < 20", "dist_null":"", "test":"mean_different"}
+{"dimension":"ad_campaign_a,ad_campaign_b", "test":"2d_mean_higher"}
+{"dimension":"ad_campaign_a,ad_campaign_b", "test":"2d_mean_smaller"}
+{"dimension":"ad_campaign_a,ad_campaign_b", "test":"2d_mean_same"}
+{"dimension":"ad_campaign_a,ad_campaign_b", "test":"2d_mean_different"}
+{"dimension":"min_on_site", "bucket_width":10, "bucket_ref":0, "bucket_agg":"count", "dist_alt":"design == \'blue\'", "dist_null":"", "test":"shape_same"}
+{"dimension":"min_on_site", "bucket_width":10, "bucket_ref":0, "bucket_agg":"count", "dist_alt":"design == \'blue\'", "dist_null":"", "test":"shape_different"}
+{"dimension":"region", "bucket_width":1, "bucket_ref":-1, "bucket_agg":"count", "dist_alt":"ad_campaign_a==1", "dist_null":"", "test":"shape_same"}
+{"dimension":"ad_campaign_b,age", "test":"not_corr"}
+{"dimension":"nr_of_visits,purchases", "test":"not_corr"}
+{"dimension":"nr_of_visits,purchases", "test":"corr"}
+{"dimension":"nr_of_visits", "bucket_width":2, "bucket_ref":0, "bucket_agg":"count", "filter":"age>=35 and age < 40", "target_buckets":"nr_of_visits >= 6 and nr_of_visits < 8", "test":"max_bucket_either"}
+{"dimension":"nr_of_visits", "bucket_width":2, "bucket_ref":0, "bucket_agg":"count", "filter":"age>=25 and age < 30", "target_buckets":"nr_of_visits >= 6 and nr_of_visits < 8", "test":"max_bucket_either"}
+{"dimension":"age", "bucket_width":5, "bucket_ref":15, "bucket_agg":"avg,hours_of_sleep", "filter":"", "target_buckets":"age >= 40 and age < 50", "test":"min_bucket_either"}
+{"dimension":"mobile", "filter":"income > 200000", "test":"mean == 7.5"}
+{"dimension": "income", "bucket_width": 20000, "bucket_ref": 0, "bucket_agg": "avg,purchase_amount", "filter": "", "target_buckets": "", "test": "buckets_different"}
+{"dimension":"age", "filter":"", "target_buckets":"age >= 35 and age < 55, age >=15 and age < 35, age >= 55 and age <= 75", "test":"rank_buckets_count"}
+{"dimension":"ad_campaign_a", "bucket_width":1, "bucket_ref":0, "bucket_agg":"count", "filter":"", "target_buckets":"ad_campaign_a == 1, ad_campaign_a == 0", "test":"buckets_same"}
+{"dimension":"hours_of_sleep", "dist_alt":"work_per_week >=60 and work_per_week < 120 and stress_level >= 3 and stress_level < 6", "dist_null":"", "test":"variance_smaller"}
+
+{"dimension":"ad_campaign_a", "bucket_width":1, "bucket_ref":0, "bucket_agg":"count", "filter":"", "target_buckets":"ad_campaign_a == 1, ad_campaign_a == 0", "test":"buckets_same"}
+{"dimension":"ad_campaign_a", "bucket_width":1, "bucket_ref":0, "bucket_agg":"count", "filter":"", "target_buckets":"ad_campaign_a == 1, ad_campaign_a == 0", "test":"buckets_different"}
+{"dimension":"ad_campaign_b", "dist_alt":"region == \'Midwest\' or region == \'West\'", "dist_null":"", "test":"mean_higher"}
+
+{"filter": "work_per_week >=0 and work_per_week < 40", "test": "mean == 7.5", "prediction": "positive", "dimension": "hours_of_sleep"}
+{"filter": "stress_level >= 2 and stress_level < 3", "dimension": "hours_of_sleep", "prediction": "positive", "test": "mean >= 5 and mean < 10"}
+{"filter": "stress_level >= 2 and stress_level < 3", "test": "mean >= 5 and mean < 10", "prediction": "positive", "dimension": "hours_of_sleep"}
+{"bucket_ref": -1, "test": "min_bucket_either", "target_buckets": "region==\'Northeast\'", "prediction": "positive", "dimension": "region", "filter": "", "bucket_agg": "count", "bucket_width": 1}
+{"bucket_ref": 15, "test": "max_bucket_either", "target_buckets": "age >= 30 and age < 35", "prediction": "positive", "dimension": "age", "filter": "", "bucket_agg": "count", "bucket_width": 5}
+{"dist_null": "", "test": "variance_smaller", "prediction": "positive", "dist_alt": "work_per_week >=60 and work_per_week < 120 and stress_level >= 3 and stress_level < 6", "dimension": "hours_of_sleep"}
+{"filter": "", "test": "rank_buckets_count", "target_buckets": "age >= 35 and age < 55, age >=15 and age < 35, age >= 55 and age <= 75", "prediction": "positive", "dimension": "age"}
+{"dimension": "hours_of_sleep", "filter": "gender == \'female\'", "test": "mean == 7.8", "prediction": "positive"}'
+{"dimension": "purchase_amount", "filter":"", "test":"mean >= 110 and mean < 111"}

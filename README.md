@@ -14,9 +14,9 @@ To generate data, use `data_generator.py` script.  Use `-h` to see usage.
 
 Usage:
 ```bash
-python3 macau.py <exec_mode> <data_path> <permutations> <hypotheses_path>
+python3 macau.py <data_path> <permutations> <hypotheses_path>
 ```
-The `data_path` is a data file output by `data_generator`.
+The `data_path` is a data file output by `data_generator`. ---
 The `hypotheses_path` is a file containing hypotheses that are formatted using the encoding scheme intoduced in [1].
 
 ## Reference

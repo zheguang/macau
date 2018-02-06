@@ -224,12 +224,11 @@ class Histogram(ObjectDict):
 
 
 class Resampler(object):
-    def __init__(self, src_table, discovery, n_perms, exec_mode):
+    def __init__(self, src_table, discovery, n_perms):
         self.src_table = src_table
         self.d = discovery
         self.n_perms = n_perms
         self.perm_table = src_table.copy()
-        self.exec_mode = exec_mode
 
         if seed != None:
             np.random.seed(seed)
@@ -491,18 +490,7 @@ class Resampler(object):
 
             return (p_est, sig, flipped)
 
-        sub_sat = t(self.src_table)
-        sub_sat_msg = 'user observation has to be true on the dataset'
-        if self.exec_mode == 'test':
-            assert sub_sat == True, sub_sat_msg
-            res = run_test()
-        else:
-            assert self.exec_mode == 'truth'
-            if sub_sat == False:
-                print('[warn] {}'.format(sub_sat_msg))
-                res = (1, False, False)
-            else:
-                res = run_test()
+        res = run_test()
 
         return res
 
@@ -552,15 +540,14 @@ class Resampler(object):
 
 
 class Discovery(ObjectDict):
-    def __init__(self, json_str, table, exec_mode):
+    def __init__(self, json_str, table):
         super().__init__(json_str)
         self.table = table
-        self.exec_mode = exec_mode
 
     def hypothesis_test(self, n_perms):
         """Returns a HypothesisTestResult."""
 
-        resampler = Resampler(self.table, self, n_perms, self.exec_mode)
+        resampler = Resampler(self.table, self, n_perms)
         flipped = False
 
         #
@@ -730,70 +717,17 @@ class HypothesisTestResult(ObjectDict):
 
 def main(argv):
     if argv[1] == '-h':
-        print('usage: python3 macau.py <exec_mode> <data_path> <permutations> <hypotheses_path>')
+        print('usage: python3 macau.py <data_path> <permutations> <hypotheses_path>')
     else:
-        exec_mode = argv[1]
-        assert exec_mode in ['test', 'truth'], 'exec_mode should be either "test" or "truth"'
-        data_path = argv[2]
-        n_perms = float(argv[3])
-        hypotheses_path = argv[4]
+        data_path = argv[1]
+        n_perms = float(argv[2])
+        hypotheses_path = argv[3]
 
-        #lines = [
-        #    '{"dimension":"purchases", "dist_alt":"age>=15 and age < 20", "dist_null":"", "test":"mean_higher"}',
-        #    '{"dimension":"purchases", "dist_alt":"age>=15 and age < 20", "dist_null":"", "test":"mean_smaller"}',
-        #    '{"dimension":"purchases", "dist_alt":"age>=15 and age < 20", "dist_null":"", "test":"mean_same"}',
-        #    '{"dimension":"purchases", "dist_alt":"age>=15 and age < 20", "dist_null":"", "test":"mean_different"}',
-
-        #    '{"dimension":"ad_campaign_a,ad_campaign_b", "test":"2d_mean_higher"}',
-        #    '{"dimension":"ad_campaign_a,ad_campaign_b", "test":"2d_mean_smaller"}',
-        #    '{"dimension":"ad_campaign_a,ad_campaign_b", "test":"2d_mean_same"}',
-        #    '{"dimension":"ad_campaign_a,ad_campaign_b", "test":"2d_mean_different"}',
-
-        #    '{"dimension":"min_on_site", "bucket_width":10, "bucket_ref":0, "bucket_agg":"count", "dist_alt":"design == \'blue\'", "dist_null":"", "test":"shape_same"}',
-        #    '{"dimension":"min_on_site", "bucket_width":10, "bucket_ref":0, "bucket_agg":"count", "dist_alt":"design == \'blue\'", "dist_null":"", "test":"shape_different"}',
-        #    '{"dimension":"region", "bucket_width":1, "bucket_ref":-1, "bucket_agg":"count", "dist_alt":"ad_campaign_a==1", "dist_null":"", "test":"shape_same"}',
-
-        #    '{"dimension":"ad_campaign_b,age", "test":"not_corr"}',
-        #    '{"dimension":"nr_of_visits,purchases", "test":"not_corr"}',
-        #    '{"dimension":"nr_of_visits,purchases", "test":"corr"}',
-
-        #    '{"dimension":"nr_of_visits", "bucket_width":2, "bucket_ref":0, "bucket_agg":"count", "filter":"age>=35 and age < 40", "target_buckets":"nr_of_visits >= 6 and nr_of_visits < 8", "test":"max_bucket_either"}',
-        #    '{"dimension":"nr_of_visits", "bucket_width":2, "bucket_ref":0, "bucket_agg":"count", "filter":"age>=25 and age < 30", "target_buckets":"nr_of_visits >= 6 and nr_of_visits < 8", "test":"max_bucket_either"}',
-        #    '{"dimension":"age", "bucket_width":5, "bucket_ref":15, "bucket_agg":"avg,hours_of_sleep", "filter":"", "target_buckets":"age >= 40 and age < 50", "test":"min_bucket_either"}',
-
-        #    '{"dimension":"mobile", "filter":"income > 200000", "test":"mean == 7.5"}',
-        #    '{"dimension": "income", "bucket_width": 20000, "bucket_ref": 0, "bucket_agg": "avg,purchase_amount", "filter": "", "target_buckets": "", "test": "buckets_different"}',
-
-        #    '{"dimension":"age", "filter":"", "target_buckets":"age >= 35 and age < 55, age >=15 and age < 35, age >= 55 and age <= 75", "test":"rank_buckets_count"}',
-
-        #    '{"dimension":"ad_campaign_a", "bucket_width":1, "bucket_ref":0, "bucket_agg":"count", "filter":"", "target_buckets":"ad_campaign_a == 1, ad_campaign_a == 0", "test":"buckets_same"}',
-
-        #    '{"dimension":"hours_of_sleep", "dist_alt":"work_per_week >=60 and work_per_week < 120 and stress_level >= 3 and stress_level < 6", "dist_null":"", "test":"variance_smaller"}',
-
-        #    '{"dimension":"ad_campaign_a", "bucket_width":1, "bucket_ref":0, "bucket_agg":"count", "filter":"", "target_buckets":"ad_campaign_a == 1, ad_campaign_a == 0", "test":"buckets_same"}',
-        #    '{"dimension":"ad_campaign_a", "bucket_width":1, "bucket_ref":0, "bucket_agg":"count", "filter":"", "target_buckets":"ad_campaign_a == 1, ad_campaign_a == 0", "test":"buckets_different"}',
-
-        #    '{"dimension":"ad_campaign_b", "dist_alt":"region == \'Midwest\' or region == \'West\'", "dist_null":"", "test":"mean_higher"}',
-
-        #    '{"filter": "work_per_week >=0 and work_per_week < 40", "test": "mean == 7.5", "prediction": "positive", "dimension": "hours_of_sleep"}',
-        #    '{"filter": "stress_level >= 2 and stress_level < 3", "dimension": "hours_of_sleep", "prediction": "positive", "test": "mean >= 5 and mean < 10"}',
-        #    '{"filter": "stress_level >= 2 and stress_level < 3", "test": "mean >= 5 and mean < 10", "prediction": "positive", "dimension": "hours_of_sleep"}',
-
-        #    '{"bucket_ref": -1, "test": "min_bucket_either", "target_buckets": "region==\'Northeast\'", "prediction": "positive", "dimension": "region", "filter": "", "bucket_agg": "count", "bucket_width": 1}',
-        #    '{"bucket_ref": 15, "test": "max_bucket_either", "target_buckets": "age >= 30 and age < 35", "prediction": "positive", "dimension": "age", "filter": "", "bucket_agg": "count", "bucket_width": 5}',
-
-        #    '{"dist_null": "", "test": "variance_smaller", "prediction": "positive", "dist_alt": "work_per_week >=60 and work_per_week < 120 and stress_level >= 3 and stress_level < 6", "dimension": "hours_of_sleep"}',
-
-        #    '{"filter": "", "test": "rank_buckets_count", "target_buckets": "age >= 35 and age < 55, age >=15 and age < 35, age >= 55 and age <= 75", "prediction": "positive", "dimension": "age"}',
-        #    '{"dimension": "hours_of_sleep", "filter": "gender == \'female\'", "test": "mean == 7.8", "prediction": "positive"}'
-
-        #    '{"dimension": "purchase_amount", "filter":"", "test":"mean >= 110 and mean < 111"}',
-        #]
         with open(hypotheses_path) as lines:
             table = Table.fromFile(data_path)
 
             for l in lines:
-                d = Discovery(l, table, exec_mode)
+                d = Discovery(l, table)
                 res = d.hypothesis_test(n_perms)
 
                 print('{}\n{}\n'.format(l, res))
